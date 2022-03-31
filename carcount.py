@@ -100,16 +100,17 @@ while True:
 
 	if count < prev_count:
 		total_detections += prev_count - count		
+		# print the detections when new is added
+		print("Cars counted: {0}".format(total_detections))
 
 	prev_count = count
 	# pass on the data for next loops, clear current data
 	# center_list_2 = center_list_1
 	# center_list_1 = center_list
 	center_list = []
-	# print the detections
-	# print("detected {:d} objects in image".format(len(detections)))
+	
 
-	print("IN BOX {0}, COUNT {1}".format(previous_detections, count))
+	# print("IN BOX {0}, COUNT {1}".format(previous_detections, count))
 	
 	for detection in detections:
 		if x1 < detection.Center[0] < x2 :

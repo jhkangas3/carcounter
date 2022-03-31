@@ -54,8 +54,6 @@ parser.add_argument("--overlay", type=str, default="box,labels,conf", help="dete
 
 
 
-
-
 try:
 	opt = parser.parse_known_args()[0]
 except:
@@ -111,7 +109,7 @@ while True:
 	center_list = []
 
 
-	print("IN BOX {0}, COUNT {1}".format(previous_detections, count))
+	# print("IN BOX {0}, COUNT {1}".format(previous_detections, count))
 	
 	for detection in detections:
 		if x1 < detection.Center[0] < x2 :
@@ -123,6 +121,23 @@ while True:
 	jetson.utils.cudaDrawLine(img, (x1,y1),(x1,y2), color, thick)
 	jetson.utils.cudaDrawLine(img, (x1,y2),(x2,y2), color, thick)
 	jetson.utils.cudaDrawLine(img, (x2,y1),(x2,y2), color, thick)
+
+	array = jetson.utils.cudaToNumpy(img)
+
+	font                   = cv2.FONT_HERSHEY_SIMPLEX
+	bottomLeftCornerOfText = (10,100)
+	fontScale              = 1
+	fontColor              = (255,150,150)
+	lineType               = 2
+
+	cv2.putText(array,'Car count: {0}'.format(total_detections), 
+		bottomLeftCornerOfText, 
+		font, 
+		fontScale,
+		fontColor,
+		lineType)
+
+	img = jetson.utils.cudaFromNumpy(array)
 
 	# render the image
 	output.Render(img)
