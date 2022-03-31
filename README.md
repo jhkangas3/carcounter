@@ -2,7 +2,7 @@
 
 This program will count the amount of cars passing the camera.
 
-<video width="640" height="360" controls>
+<video width="1280" height="720" controls>
   <source src="my_video.mp4" type="video/mp4">
 </video>
 
