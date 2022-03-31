@@ -1,3 +1,8 @@
+'''
+Computer-vision based car counter.
+Author: Juho Kangas
+'''
+
 import jetson.inference
 import jetson.utils
 
