@@ -122,8 +122,10 @@ while True:
 	jetson.utils.cudaDrawLine(img, (x1,y2),(x2,y2), color, thick)
 	jetson.utils.cudaDrawLine(img, (x2,y1),(x2,y2), color, thick)
 
+	# Frame converted to numpy array so cv2 can be used
 	array = jetson.utils.cudaToNumpy(img)
 
+	# Text is written on the frame to display the amount of passed cars
 	font                   = cv2.FONT_HERSHEY_SIMPLEX
 	bottomLeftCornerOfText = (10,100)
 	fontScale              = 1
@@ -137,6 +139,7 @@ while True:
 		fontColor,
 		lineType)
 
+	# Conversion back to cuda frame for rendering
 	img = jetson.utils.cudaFromNumpy(array)
 
 	# render the image
