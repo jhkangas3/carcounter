@@ -8,13 +8,16 @@ import jetson.utils
 
 import argparse
 import sys
-
+# Import math for square root for distance calculation
 import math
+# For timestamping the detections to a text file
+from datetime import datetime
 
 # custom model paths
 model_path = 'model/ssd-mobilenet.onnx'
 label_path = 'model/labels.txt'
 
+# Set the minimum detection certainty threshold
 detect_threshold = '0.3'
 
 total_detections = 0
@@ -26,7 +29,7 @@ prev_count = 0
 
 # detection area coordinate definitions
 x1 = 600
-x2 = 720
+x2 = 680
 y1 = 300
 y2 = 700
 
@@ -49,8 +52,8 @@ parser.add_argument("input_URI", type=str, default="/dev/video0", nargs='?', hel
 parser.add_argument("output_URI", type=str, default="", nargs='?', help="URI of the output stream")
 parser.add_argument("--overlay", type=str, default="box,labels,conf", help="detection overlay flags (e.g. --overlay=box,labels,conf)\nvalid combinations are:  'box', 'labels', 'conf', 'none'")
 
-
-
+# Open a file to save detections
+file = open("detections.txt", 'w')
 
 
 try:
@@ -92,31 +95,25 @@ while True:
 			if distance(detection.Center[0], detection.Center[1], centerpoints[0], centerpoints[1]) < distance_cutoff:
 				count += 1
 
-	# if count < previous_detections:
-	# 	for detection in detections:
-	# 		for centerpoints in center_list_1:
-	# 			if distance(detection.Center[0], detection.Center[1], centerpoints[0], centerpoints[1]) < distance_cutoff:
-	# 				count += 1
+
 
 	if count < prev_count:
 		total_detections += prev_count - count		
 		# print the detections when new is added
 		print("Cars counted: {0}".format(total_detections))
+		file.write("{0},{1} \n".format(total_detections, datetime.now()))
 
 	prev_count = count
-	# pass on the data for next loops, clear current data
-	# center_list_2 = center_list_1
-	# center_list_1 = center_list
+
 	center_list = []
 	
-
-	# print("IN BOX {0}, COUNT {1}".format(previous_detections, count))
 	
 	for detection in detections:
 		if x1 < detection.Center[0] < x2 :
 			# save detection info for next loop if they are within the detection box
 			center_list.append(detection.Center)
 
+	# Draw a box around the intended detection zone
 	jetson.utils.cudaDrawLine(img, (x1,y1),(x2,y1), color, thick)
 	jetson.utils.cudaDrawLine(img, (x1,y1),(x1,y2), color, thick)
 	jetson.utils.cudaDrawLine(img, (x1,y2),(x2,y2), color, thick)
@@ -131,4 +128,5 @@ while True:
 
 	# exit on input/output EOS
 	if not input.IsStreaming() or not output.IsStreaming():
+		file.close()
 		break
