@@ -2,6 +2,8 @@
 
 This program will count the amount of cars passing the camera.
 
+Demo video of the program can be opened by clicking the picture underneath.
+
 [![Demo video](https://img.youtube.com/vi/UZwzsyBBVkY/0.jpg)](https://youtu.be/UZwzsyBBVkY)
 
 The program uses computer vision and AI to detect cars, count the amount of cars passed, and . Object detection model for this program was trained for this specific purpose. It knows only one class, which is "car". Training material was gathered using the same camera and in the same position as the demo video shows. 1000+ photos were gathered during various times of day and various weathers in slightly varying camera orientations. Taken pictures were used to re-train SSD-mobilenet-V2 to 50 epochs. Trained model reached total loss of ~1.6, which could be potentially improved by gathering more data, but it was found to be sufficient when tracking cars through a narrow slice of the camera view. The model was converted to ONNX format. The model created for this purpose is optimized to work with camera in specific position looking through my window, so results may vary if tried elsewhere.
